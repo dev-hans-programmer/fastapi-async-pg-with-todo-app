@@ -1,7 +1,6 @@
-from fastapi import FastAPI, status
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI
 
-from app.core.config import settings
+from app.common.utils.response import JSendResponse, jsend_response
 from app.core.logger import get_logger
 
 
@@ -9,11 +8,9 @@ logger = get_logger('Root')
 app = FastAPI()
 
 
-@app.get('/')
+@app.get('/', response_model=JSendResponse)
 def root():
     logger.info('Root endpoint')
-    print(settings.NAME)
-    return JSONResponse(
-        status_code=status.HTTP_200_OK,
-        content={'message': 'Hello User, welcome to todolist server'},
+    return jsend_response(
+        data={'message': 'Hello User, welcome to todolist server'},
     )
