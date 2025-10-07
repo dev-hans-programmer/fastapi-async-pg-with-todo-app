@@ -4,6 +4,8 @@ from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
+print('Test')
+
 
 @app.get('/')
 def root():
