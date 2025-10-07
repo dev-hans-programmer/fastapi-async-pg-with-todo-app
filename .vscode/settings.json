@@ -1,0 +1,15 @@
+{
+   "editor.mouseWheelZoom": true,
+   "editor.formatOnSave": true,
+   "[python]": {
+      "editor.codeActionsOnSave": {
+         "source.convertImportFormat": "explicit",
+         "source.fixAll": "explicit",
+         "source.organizeImports.ruff": "explicit"
+      }
+   },
+   "editor.defaultFormatter": "charliermarsh.ruff",
+   "python.analysis.autoImportCompletions": true,
+   "python.analysis.extraPaths": ["${workspaceFolder}/app"],
+   "python.analysis.importFormat": "absolute"
+}
