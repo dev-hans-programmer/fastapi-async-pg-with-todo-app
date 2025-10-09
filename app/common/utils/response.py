@@ -1,16 +1,16 @@
-# utils/response.py
-from typing import Any, Optional
+from typing import Any, Generic, Optional, TypeVar
 
 from fastapi.responses import JSONResponse
-
-# schemas/response.py
 from pydantic import BaseModel
 
 
-class JSendResponse(BaseModel):
+T = TypeVar('T')
+
+
+class JSendResponse(BaseModel, Generic[T]):
     status: str
-    message: Optional[str] = None
-    data: Optional[Any] = None
+    message: Optional[str]
+    data: Optional[T] = None
 
 
 def jsend_response(
@@ -20,12 +20,9 @@ def jsend_response(
     http_status_code: int = 200,
 ) -> JSONResponse:
     payload = {'status': status}
-
-    # Add message only if provided
     if message:
         payload['message'] = message
 
-    # Add data (can be dict, list, etc.)
     if data is not None:
         payload['data'] = data
 
