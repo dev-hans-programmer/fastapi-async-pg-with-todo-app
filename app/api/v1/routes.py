@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from app.modules.auth import auth_router
-from app.modules.todos import todo_router
+from app.modules.todo import todo_router
 
 
 api_v1_router = APIRouter(prefix='/v1')

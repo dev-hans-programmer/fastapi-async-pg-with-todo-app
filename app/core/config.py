@@ -12,6 +12,7 @@ print(f'HASAn {env}')
 
 class Setting(BaseSettings):
     NAME: str
+    DB_URL: str
 
     model_config = SettingsConfigDict(env_file=env_file, extra='ignore')
 
