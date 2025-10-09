@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 import uuid
 
@@ -16,3 +17,4 @@ class TodoUpdate(SQLModel):
 
 class TodoRead(TodoCreate):
     id: uuid.UUID
+    created_at: datetime
