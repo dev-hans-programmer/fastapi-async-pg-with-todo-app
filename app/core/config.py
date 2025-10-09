@@ -7,8 +7,6 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 env = os.getenv('ENV')
 env_file = f'.env.{env}'
 
-print(f'HASAn {env}')
-
 
 class Setting(BaseSettings):
     NAME: str

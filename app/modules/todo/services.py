@@ -1,8 +1,11 @@
+from typing import Optional
+import uuid
+
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.core.db.models.todos import Todo
-from app.modules.todo.schemas import TodoCreate
+from app.modules.todo.schemas import TodoCreate, TodoUpdate
 
 
 class TodoService:
@@ -19,3 +22,28 @@ class TodoService:
     async def list_todos(self):
         result = await self.__session.exec(select(Todo))
         return result.all()
+
+    async def get_todo(self, todo_id: uuid.UUID) -> Optional[Todo]:
+        result = await self.__session.exec(select(Todo).where(Todo.id == todo_id))
+        return result.first()
+
+    async def update_todo(self, todo_id: uuid.UUID, data: TodoUpdate) -> Optional[Todo]:
+        todo = await self.get_todo(todo_id)
+
+        if not todo:
+            return None
+
+        for k, v in data.model_dump(exclude_unset=True).items():
+            setattr(todo, k, v)
+        self.__session.add(todo)
+        await self.__session.commit()
+        await self.__session.refresh(todo)
+        return todo
+
+    async def delete_todo(self, todo_id: uuid.UUID) -> bool:
+        todo = await self.get_todo(todo_id)
+        if not todo:
+            return False
+        await self.__session.delete(todo)
+        await self.__session.commit()
+        return True
