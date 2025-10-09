@@ -1,5 +1,6 @@
 from typing import Any, Generic, Optional, TypeVar
 
+from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
@@ -26,4 +27,4 @@ def jsend_response(
     if data is not None:
         payload['data'] = data
 
-    return JSONResponse(content=payload, status_code=http_status_code)
+    return JSONResponse(content=jsonable_encoder(payload), status_code=http_status_code)
