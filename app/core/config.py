@@ -4,7 +4,7 @@ import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-env = os.getenv('ENV')
+env = os.getenv('ENV', 'dev')
 env_file = f'.env.{env}'
 
 

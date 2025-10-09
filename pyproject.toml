@@ -24,7 +24,13 @@ dev = ["ruff>=0.13.3"]
 src = ["app"]
 line-length = 88
 target-version = "py312"
-exclude = [".venv"]
+exclude = [ "migrations",      # Alembic migration scripts
+    "tests",           # Test files (optional)
+    ".venv",           # Virtual environment
+    "build",           # Build artifacts
+    "dist",            # Distribution packages
+    "__pycache__",     # Cache folders]
+]
 
 [tool.ruff.lint]
 select=["E","F","W","I"]
