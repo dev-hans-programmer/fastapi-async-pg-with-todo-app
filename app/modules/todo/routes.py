@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.common.utils.response import JSendResponse, jsend_response
@@ -16,16 +16,22 @@ def get_todo_service(session: AsyncSession = Depends(get_session)):
     return TodoService(session)
 
 
-@todo_router.post('/', response_model=JSendResponse[TodoRead])
+@todo_router.post('/', response_model=JSendResponse[list[TodoRead]])
 async def create_todo(
     data: TodoCreate, service: TodoService = Depends(get_todo_service)
 ):
     return jsend_response(data={'todo': await service.create_todo(data)})
 
 
-@todo_router.get('/', response_model=JSendResponse[TodoRead])
-async def list_todos(service: TodoService = Depends(get_todo_service)):
-    return jsend_response(data={'todos': await service.list_todos()})
+@todo_router.get('/', response_model=JSendResponse[list[TodoRead]])
+async def list_todos(
+    service: TodoService = Depends(get_todo_service),
+    page: int = Query(1, ge=1, description='Page number'),
+    limit: int = Query(10, ge=1, le=100, description='Number of todos per page'),
+):
+    offset = (page - 1) * limit
+    todos = await service.list_todos(limit=limit, offset=offset)
+    return jsend_response(data={'todos': todos})
 
 
 @todo_router.get('/{todo_id}', response_model=TodoRead)

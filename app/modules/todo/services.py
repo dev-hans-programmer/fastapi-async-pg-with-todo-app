@@ -19,8 +19,9 @@ class TodoService:
         await self.__session.refresh(todo)
         return todo
 
-    async def list_todos(self):
-        result = await self.__session.exec(select(Todo))
+    async def list_todos(self, limit: int = 10, offset: int = 0):
+        stmt = select(Todo).offset(offset).limit(limit)
+        result = await self.__session.exec(stmt)
         return result.all()
 
     async def get_todo(self, todo_id: uuid.UUID) -> Optional[Todo]:
