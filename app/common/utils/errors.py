@@ -2,6 +2,7 @@ from typing import Optional
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
+from sqlalchemy.exc import IntegrityError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.common.utils.response import jsend_response
@@ -24,7 +25,7 @@ class TodoException(Exception):
 
 
 def register_errors(app: FastAPI):
-    logger = get_logger('uvicorn.error')
+    logger = get_logger('custom.error.handler')
 
     @app.exception_handler(TodoException)
     async def todo_exception_handler(request: Request, exc: TodoException):
@@ -81,10 +82,15 @@ def register_errors(app: FastAPI):
         logger.error(f'Unhandled exception at {request.url.path}: {exc}', exc_info=True)
         # Hide raw error messages in production
         message = 'An unexpected error occurred'
+        http_status_code = 500
+        if isinstance(exc, IntegrityError):
+            message = exc._message()
+            http_status_code = 422
+
         return jsend_response(
             status='error',
             message=message,
             code='INTERNAL_SERVER_ERROR',
             data={'path': str(request.url.path), 'type': type(exc).__name__},
-            http_status_code=500,
+            http_status_code=http_status_code,
         )

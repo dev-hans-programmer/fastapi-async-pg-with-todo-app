@@ -11,9 +11,10 @@ class AuthService:
 
     async def register(self, data: UserCreate):
         # save the payload
+        password = data.password
         user = User(**data.model_dump())
-        print(f'USER====== {user.password} {hash_password(user.password)}')
-        user.password = hash_password(user.password)
+        # print(f'USER====== {user.password} {hash_password(user.password)}')
+        user.password = hash_password(password)
         self.__session.add(user)
         await self.__session.commit()
         return user.id
