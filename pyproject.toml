@@ -7,8 +7,10 @@ requires-python = ">=3.12"
 dependencies = [
     "alembic>=1.16.5",
     "asyncpg>=0.30.0",
+    "bcrypt>=5.0.0",
     "fastapi[standard]>=0.118.0",
     "greenlet>=3.2.4",
+    "passlib>=1.7.4",
     "pre-commit>=4.3.0",
     "pydantic-settings>=2.11.0",
     "python-json-logger>=4.0.0",

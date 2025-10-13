@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
 from app.api.v1.routes import api_v1_router
+from app.common.utils.errors import register_errors
 from app.common.utils.response import jsend_response
 from app.core.logger import get_logger
 
@@ -16,5 +17,7 @@ def root():
         data={'message': 'Hello User, welcome to todolist server'}, message='hello'
     )
 
+
+register_errors(app)
 
 app.include_router(router=api_v1_router, prefix='/api')
