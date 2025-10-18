@@ -11,3 +11,8 @@ class UserService:
     async def list_users(self):
         result = await self.__session.exec(select(User))
         return result.all()
+
+    async def get_user_by_email(self, email: str):
+        statement = select(User).where(User.email == email)
+        result = await self.__session.exec(statement)
+        return result.first()

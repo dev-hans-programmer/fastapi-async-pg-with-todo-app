@@ -79,7 +79,7 @@ def register_errors(app: FastAPI):
     @app.exception_handler(Exception)
     async def global_exception_handler(request: Request, exc: Exception):
         """Catch all unhandled exceptions"""
-        logger.error(f'Unhandled exception at {request.url.path}: {exc}', exc_info=True)
+        logger.error(f'Unhandled exception at {request.url.path}: {exc}')
         # Hide raw error messages in production
         message = 'An unexpected error occurred'
         http_status_code = 500

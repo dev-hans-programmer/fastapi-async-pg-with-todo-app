@@ -12,3 +12,13 @@ class UserCreate(SQLModel):
 
 class UserResponse(UserCreate):
     id: uuid.UUID
+
+
+class UserLoginPayload(SQLModel):
+    email: str
+    password: str
+
+
+class LoginResponse(SQLModel):
+    access_token: str
+    refresh_token: str
