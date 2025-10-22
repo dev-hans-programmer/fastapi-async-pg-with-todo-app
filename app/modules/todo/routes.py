@@ -8,7 +8,7 @@ from app.common.utils.response import JSendResponse, jsend_response
 from app.core.db.engine import get_session
 from app.modules.auth.dependencies import get_current_user
 from app.modules.auth.schemas import UserResponse
-from app.modules.todo.schemas import TodoCreate, TodoRead, TodoUpdate
+from app.modules.todo.schemas import TodoCreate, TodoRead, TodoUpdate, TodoWithUser
 from app.modules.todo.services import TodoService
 
 
@@ -33,7 +33,7 @@ async def create_todo(
     )
 
 
-@todo_router.get('/', response_model=JSendResponse[list[TodoRead]])
+@todo_router.get('/', response_model=JSendResponse[list[TodoWithUser]])
 async def list_todos(
     service: TodoService = Depends(get_todo_service),
     page: int = Query(1, ge=1, description='Page number'),
@@ -44,7 +44,7 @@ async def list_todos(
     return jsend_response(data={'todos': todos})
 
 
-@todo_router.get('/{todo_id}', response_model=TodoRead)
+@todo_router.get('/{todo_id}', response_model=TodoWithUser)
 async def get_todo(todo_id: UUID, service: TodoService = Depends(get_todo_service)):
     todo = await service.get_todo(todo_id)
     if not todo:

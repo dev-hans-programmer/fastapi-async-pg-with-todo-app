@@ -1,6 +1,6 @@
 import uuid
 
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
 
 
 class User(SQLModel, table=True):
@@ -10,3 +10,5 @@ class User(SQLModel, table=True):
     first_name: str
     last_name: str
     password: str
+
+    todos: list['Todo'] = Relationship(back_populates='user')  # type: ignore # noqa

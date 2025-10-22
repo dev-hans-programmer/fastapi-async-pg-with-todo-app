@@ -3,7 +3,7 @@ from typing import Optional
 import uuid
 
 import sqlalchemy.dialects.postgresql as pg
-from sqlmodel import Column, Field, SQLModel
+from sqlmodel import Column, Field, Relationship, SQLModel
 
 
 def utc_now():
@@ -19,3 +19,5 @@ class Todo(SQLModel, table=True):
         sa_column=Column(pg.TIMESTAMP(timezone=True), default=utc_now)
     )
     user_id: Optional[uuid.UUID] = Field(default=None, foreign_key='users.id')
+
+    user: 'User' = Relationship(back_populates='todos')  # type: ignore # noqa
