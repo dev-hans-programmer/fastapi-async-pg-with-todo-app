@@ -3,14 +3,17 @@ import uuid
 from sqlmodel import Field, SQLModel
 
 
-class UserCreate(SQLModel):
+class UserBase(SQLModel):
     email: str
     first_name: str
     last_name: str
+
+
+class UserCreate(UserBase):
     password: str = Field(min_length=4)
 
 
-class UserResponse(UserCreate):
+class UserResponse(UserBase):
     id: uuid.UUID
 
 

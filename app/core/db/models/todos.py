@@ -18,3 +18,4 @@ class Todo(SQLModel, table=True):
     created_at: datetime = Field(
         sa_column=Column(pg.TIMESTAMP(timezone=True), default=utc_now)
     )
+    user_id: Optional[uuid.UUID] = Field(default=None, foreign_key='users.id')

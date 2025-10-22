@@ -12,8 +12,8 @@ class TodoService:
     def __init__(self, session: AsyncSession) -> None:
         self.__session = session
 
-    async def create_todo(self, data: TodoCreate):
-        todo = Todo(**data.model_dump())
+    async def create_todo(self, data: TodoCreate, user_id: uuid.UUID):
+        todo = Todo(**data.model_dump(), user_id=user_id)
         self.__session.add(todo)
         await self.__session.commit()
         await self.__session.refresh(todo)
@@ -22,6 +22,11 @@ class TodoService:
     async def list_todos(self, limit: int = 10, offset: int = 0):
         stmt = select(Todo).offset(offset).limit(limit)
         result = await self.__session.exec(stmt)
+        return result.all()
+
+    async def list_todos_by_user(self, user_id: uuid.UUID):
+        statement = select(Todo).where(Todo.user_id == user_id)
+        result = await self.__session.exec(statement)
         return result.all()
 
     async def get_todo(self, todo_id: uuid.UUID) -> Optional[Todo]:

@@ -5,7 +5,12 @@ from app.common.utils.errors import TodoException
 from app.common.utils.response import JSendResponse, jsend_response
 from app.core.db.engine import get_session
 from app.modules.auth.dependencies import get_current_user
-from app.modules.auth.schemas import LoginResponse, UserCreate, UserLoginPayload
+from app.modules.auth.schemas import (
+    LoginResponse,
+    UserCreate,
+    UserLoginPayload,
+    UserResponse,
+)
 from app.modules.auth.security import create_token, verify_password
 from app.modules.auth.services import AuthService
 from app.modules.user.services import UserService
@@ -59,6 +64,6 @@ async def login(
     # send to the client
 
 
-@auth_router.get('/self')
+@auth_router.get('/self', response_model=JSendResponse[UserResponse])
 async def get_me(user_details=Depends(get_current_user)):
     return jsend_response(data={'user': user_details})

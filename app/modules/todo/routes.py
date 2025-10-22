@@ -1,3 +1,4 @@
+import uuid
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
@@ -5,6 +6,8 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.common.utils.response import JSendResponse, jsend_response
 from app.core.db.engine import get_session
+from app.modules.auth.dependencies import get_current_user
+from app.modules.auth.schemas import UserResponse
 from app.modules.todo.schemas import TodoCreate, TodoRead, TodoUpdate
 from app.modules.todo.services import TodoService
 
@@ -18,9 +21,16 @@ def get_todo_service(session: AsyncSession = Depends(get_session)):
 
 @todo_router.post('/', response_model=JSendResponse[list[TodoRead]])
 async def create_todo(
-    data: TodoCreate, service: TodoService = Depends(get_todo_service)
+    data: TodoCreate,
+    service: TodoService = Depends(get_todo_service),
+    user_details: UserResponse = Depends(get_current_user),
 ):
-    return jsend_response(data={'todo': await service.create_todo(data)})
+    user_id = user_details.id
+    # payload = data.model_copy(update={'user_id': user_id})
+    # print(f'PAYLOAD======{data} {user_details}')
+    return jsend_response(
+        data={'todo': await service.create_todo(data=data, user_id=user_id)}
+    )
 
 
 @todo_router.get('/', response_model=JSendResponse[list[TodoRead]])
@@ -64,3 +74,10 @@ async def delete_todo(todo_id: UUID, service: TodoService = Depends(get_todo_ser
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Todo not found'
         )
+
+
+@todo_router.get('/user/{user_id}', response_model=JSendResponse[list[TodoRead]])
+async def get_todos_by_user(
+    user_id: uuid.UUID, service: TodoService = Depends(get_todo_service)
+):
+    return jsend_response(data={'todos': await service.list_todos_by_user(user_id)})

@@ -5,6 +5,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.common.utils.errors import TodoException
 from app.core.db.engine import get_session
+from app.modules.auth.schemas import UserResponse
 from app.modules.auth.security import decode_token
 from app.modules.user.services import UserService
 
@@ -71,5 +72,5 @@ async def get_current_user(
     if not user:
         raise TodoException(status.HTTP_401_UNAUTHORIZED, message='Unauthorized')
 
-    del user.password
-    return user
+    # del user.password # this is harmful as it deleted the field from the session
+    return UserResponse.model_validate(user)

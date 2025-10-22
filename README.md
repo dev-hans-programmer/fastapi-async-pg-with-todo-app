@@ -11,3 +11,4 @@
 2. Now you can add or remove any field in the model and create a migration
 3. Create a migration: alembic revision --autogenerate -m "Tables creation" - Creates a migration
 4. Apply the migration: alembic upgrade head
+5. alembic downgeade base - will delete all the tables
